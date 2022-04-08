@@ -1,0 +1,4 @@
+Total artists: 16603
+Total Albums: 131320
+Total Tracks: 150030
+Total with Lyrics: 56481
