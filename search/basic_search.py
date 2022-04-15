@@ -25,8 +25,7 @@ class BasicSearch(object):
         self.index = open_dir(index_file)
         self.corpus = self.load_corpus(['track', 'album', 'genre', 'artist'])
 
-    ''' corpus of names for track, artist, genre, artist'''
-
+    ''' load corpus of names for track, artist, genre, artist '''
     def load_corpus(self, file_list):
         for file in file_list:
             file_name = 'corpus_data/' + file + '.json'
@@ -41,6 +40,7 @@ class BasicSearch(object):
                     self.artist_corpus = json.load(f)
                 f.close()
 
+    ''' main search function to be called with the user query '''
     def search(self, query):
         possible_type, key_value = self.determine_type(query.lower())
         if possible_type == 'None':
@@ -69,8 +69,9 @@ class BasicSearch(object):
         # elif possible_type == 'genre':
         # elif possible_type == 'album':
 
-    ''' check if a given name is in any corpus type'''
-
+    ''' function to check if a given value is in any corpus type
+        if so, we will use whoosh to search, else, return no result
+    '''
     def in_corpus(self, data_type, value):
         if data_type == 'track':
             if value in self.track_corpus[value[0]]:
@@ -92,7 +93,6 @@ class BasicSearch(object):
     ''' determine what is the type of the query if possible 
 		ex: if a query string is about track_name or others
 	'''
-
     def determine_type(self, query):
         words = query.split()
         if any(x in track_synonym for x in words):
@@ -109,7 +109,6 @@ class BasicSearch(object):
             return ('None', query)
 
     '''search a key_value based on the key_word'''
-
     def whoosh_search(self, key_word, key_value):
         result_limit = 10
         with self.index.searcher() as searcher:
@@ -117,6 +116,7 @@ class BasicSearch(object):
             results = searcher.search(query, limit=result_limit)
             self.print_result(results, key_word, key_value, result_limit)
 
+    ''' print result from whoosh search '''
     def print_result(self, results, key_word, key_value, result_limit=None):
         if results:
             print(f"----\nResult FOUND for \"{key_word} = {key_value}\"")

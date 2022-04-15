@@ -1,6 +1,9 @@
 import json
 from collections import OrderedDict
 
+''' create a corpus, files to contain all tracks, artist, album, and genre names based on the first char
+    example can be found in the corpus_data folder
+'''
 class CreateCorpus(object):
     def __init__(self):
         self.create_corpus('data/all_tracks.json', 'track', 'track.json')
@@ -8,14 +11,15 @@ class CreateCorpus(object):
         self.create_corpus('data/artist.json', 'artist', 'artist.json')
         self.create_corpus('data/genre.json', 'genre', 'genre.json')
     
+    '''create corpus for given file'''
     def create_corpus(self, data_file, data_type, output_name):
-        '''create corpus for given file'''
         file = open(data_file, 'r')
         db = json.load(file)
         file.close()
         track_dict = self.add_corpus(db, data_type)
         self.write_to_file(track_dict, output_name)
 
+    ''' create corpus based on the type'''
     def add_corpus(self, db, data_type):
         my_dictionary = {}
 
@@ -38,6 +42,7 @@ class CreateCorpus(object):
 
         return dict(OrderedDict(sorted(my_dictionary.items())))
 
+    ''' a helper function to add data into existing key in the dictionary'''
     def update_dictionary(self, data, my_dictionary):
         if data[0] not in my_dictionary:
             my_dictionary[data[0]] = [data]
